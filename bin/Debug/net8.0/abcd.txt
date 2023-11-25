@@ -1,0 +1,15 @@
+Cliente; fred; 16177629628
+agua; 10; 20; residencial
+agua; 20; 40; comercial
+agua; 40; 45; comercial
+energia; 10; 20;
+energia; 10; 20;
+energia; 20; 30;
+
+Cliente; rodrigo; 16177629622
+agua; 10; 20; residencial
+agua; 20; 40; comercial
+agua; 40; 45; comercial
+energia; 10; 20;
+energia; 10; 20;
+energia; 20; 30;

@@ -1,0 +1,33 @@
+Cliente; fred; 12345678912
+agua; 10; 20; residencial; 1
+agua; 20; 40; comercial;2
+agua; 40; 45; comercial;3
+agua; 45; 55; residencial; 4
+agua; 55; 70; comercial;5
+agua; 70; 100; comercial;6
+agua; 100; 120; residencial; 7
+agua; 120; 140; comercial;8
+agua; 140; 155; comercial;9
+agua; 155; 180; residencial; 10
+agua; 180; 240; comercial:11
+agua; 240; 270; comercial;12
+energia; 10; 20;residencial; 1
+energia; 10; 20;residencial;2
+energia; 20; 30;residencial;3
+energia; 10; 20;residencial;4
+energia; 10; 20;residencial;5
+energia; 20; 30;residencial;6
+energia; 10; 20;residencial;7
+energia; 10; 20;residencial;8
+energia; 20; 30;residencial;9
+energia; 10; 20;residencial;10
+energia; 10; 20;residencial;11
+energia; 20; 30;residencial;12
+
+Cliente; rodrigo; 12345678913
+agua; 10; 20; residencial
+agua; 20; 40; comercial
+agua; 40; 45; comercial
+energia; 10; 20; comercial
+energia; 10; 20; residencial
+energia; 20; 30; residencial

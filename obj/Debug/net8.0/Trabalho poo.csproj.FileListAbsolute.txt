@@ -1,0 +1,14 @@
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\bin\Debug\net8.0\Trabalho poo.exe
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\bin\Debug\net8.0\Trabalho poo.deps.json
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\bin\Debug\net8.0\Trabalho poo.runtimeconfig.json
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\bin\Debug\net8.0\Trabalho poo.dll
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\bin\Debug\net8.0\Trabalho poo.pdb
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\Trabalho poo.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\Trabalho poo.AssemblyInfoInputs.cache
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\Trabalho poo.AssemblyInfo.cs
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\Trabalho poo.csproj.CoreCompileInputs.cache
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\Trabalho poo.dll
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\refint\Trabalho poo.dll
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\Trabalho poo.pdb
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\Trabalho poo.genruntimeconfig.cache
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\ref\Trabalho poo.dll
