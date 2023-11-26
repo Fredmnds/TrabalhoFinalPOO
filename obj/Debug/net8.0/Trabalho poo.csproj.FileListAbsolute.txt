@@ -12,3 +12,4 @@ C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\refin
 C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\Trabalho poo.pdb
 C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\Trabalho poo.genruntimeconfig.cache
 C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\ref\Trabalho poo.dll
+C:\Users\frede\OneDrive\Ambiente de Trabalho\Trabalho poo\obj\Debug\net8.0\Trabalho poo.sourcelink.json

@@ -1,0 +1,3 @@
+Cliente; AA;1;
+Agua;200;100;
+Agua;100;150;
