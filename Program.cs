@@ -20,52 +20,6 @@ public class ConsumidorEncontrado : Exception
   }
 }
 
-class Consumidor
-{
-  private static int ultimoIdConsumidor = 0;
-  public int IdConsumidor { get; private set; }
-  public string Nome { get; set; }
-  public string Cpf { get; set; }
-  public TipoImovel TipoConsumidor { get; set; }
-  public List<Conta> Contas { get; set; } = new List<Conta>();
-
-  public Consumidor()
-  {
-    ultimoIdConsumidor++;
-    IdConsumidor = ultimoIdConsumidor;
-  }
-}
-
-enum TipoConta
-{
-  Agua = 0,
-  Energia = 1,
-}
-
-public enum TipoImovel
-{
-  Residencial,
-  Comercial
-}
-
-class Conta
-{
-  private static int ultimoIdConta = 0;
-  public int IdConta { get; private set; }
-  public Consumidor Consumidor { get; set; }
-  public TipoConta Tipo { get; set; }
-  public double LeituraAnterior { get; set; }
-  public double LeituraAtual { get; set; }
-  public double Consumo { get; set; }
-  public int Mes { get; set; }
-
-  public Conta()
-  {
-    ultimoIdConta++;
-    IdConta = ultimoIdConta;
-  }
-}
-
 class ContaAgua : Conta
 {
   public string TipoServico { get; set; }
@@ -76,14 +30,9 @@ class ContaEnergia : Conta
 {
   public string TipoServico { get; set; }
 }
-
-
 class Program
 {
-
   static List<Consumidor> consumidores = new List<Consumidor>();
-
-  static List<string> ArquivosLido = new List<string>();
 
   static void Sleep(int milissegundos)
   {
@@ -107,90 +56,86 @@ class Program
       Consumidor consumidorAtual = null;
       while ((line = sr.ReadLine()) != null)
       {
-
-        string[] parts = line.Split(';');
-
-        if (parts.Length > 0 && parts[0].Trim().ToLower() == "cliente")
+        try
         {
-          Consumidor consumidorEncontrado = consumidores.Find(c => c.Cpf == parts[2].Trim());
-          if (consumidorEncontrado != null)
-            throw new ConsumidorEncontrado("O Cpf: " + parts[2].Trim() + " já se encontra cadastrado!");
-          Console.WriteLine(consumidorEncontrado);
+          string[] parts = line.Split(';');
 
-          consumidorAtual = new Consumidor
+          if (parts.Length > 0 && parts[0].Trim().ToLower() == "cliente")
           {
-            Nome = parts.Length > 1 ? parts[1].Trim() : string.Empty,
-            Cpf = parts.Length > 2 ? parts[2].Trim() : string.Empty,
-            TipoConsumidor = parts[3].Trim() == "comercial" ? TipoImovel.Comercial : TipoImovel.Residencial,
-            Contas = new List<Conta>()
-          };
+            Consumidor consumidorEncontrado = consumidores.Find(c => c.Cpf == parts[2].Trim());
+            if (consumidorEncontrado != null)
+              throw new ConsumidorEncontrado("O Cpf: " + parts[2].Trim() + " já se encontra cadastrado!");
 
-          consumidores.Add(consumidorAtual);
-
-          // Console.WriteLine($"Novo consumidor criado: Nome={consumidorAtual.Nome}, CPF={consumidorAtual.Cpf}");
-        }
-        else if (parts.Length > 0 && parts[0].Trim().ToLower() == "agua")
-        {
-          if (consumidorAtual != null)
-          {
-            double atual = parts.Length > 1 ? double.Parse(parts[1].Trim()) : 0;
-            double anterior = parts.Length > 2 ? double.Parse(parts[2].Trim()) : 0;
-            double consumo = atual - anterior;
-
-            // Console.WriteLine(line);
-            ContaAgua conta1 = new ContaAgua
+            consumidorAtual = new Consumidor
             {
-              Consumidor = consumidorAtual,
-              TipoServico = parts.Length > 3 ? parts[3].Trim() : string.Empty,
-              LeituraAtual = parts.Length > 1 ? double.Parse(parts[1].Trim()) : 0,
-              LeituraAnterior = parts.Length > 2 ? double.Parse(parts[2].Trim()) : 0,
-              Tipo = TipoConta.Agua,
-              Consumo = consumo,
-              Mes = parts.Length > 4 ? int.Parse(parts[4].Trim()) : 0,
+              Nome = parts.Length > 1 ? parts[1].Trim() : string.Empty,
+              Cpf = parts.Length > 2 ? parts[2].Trim() : string.Empty,
+              TipoConsumidor = parts[3].Trim() == "comercial" ? TipoImovel.Comercial : TipoImovel.Residencial,
+              Contas = new List<Conta>()
             };
 
-            consumidorAtual.Contas.Add(conta1);
+            consumidores.Add(consumidorAtual);
 
+          }
+          else if (parts.Length > 0 && parts[0].Trim().ToLower() == "agua")
+          {
+            if (consumidorAtual != null)
+            {
+              double anterior = parts.Length > 1 ? double.Parse(parts[1].Trim()) : 0;
+              double atual = parts.Length > 2 ? double.Parse(parts[2].Trim()) : 0;
+              double consumo = atual - anterior;
 
-            // Console.WriteLine($"Nova conta de água criada para o consumidor {consumidorAtual.Nome}: LeituraAtual={conta1.LeituraAtual}, LeituraAnterior={conta1.LeituraAnterior}, TipoServico={conta1.TipoServico}");
+              // Console.WriteLine(line);
+              ContaAgua conta1 = new()
+              {
+                Consumidor = consumidorAtual,
+                LeituraAnterior = anterior,
+                LeituraAtual = atual,
+                Tipo = TipoConta.Agua,
+                Consumo = consumo,
+                Mes = parts.Length > 3 ? int.Parse(parts[3].Trim()) : 0,
+              };
+
+              consumidorAtual.Contas.Add(conta1);
+            }
+            else
+            {
+              Console.WriteLine("Erro: Encontrado registro de água antes de um cliente. Ignorando a conta de água.");
+            }
+          }
+          else if (parts.Length > 0 && parts[0].Trim().ToLower() == "energia")
+          {
+            if (consumidorAtual != null)
+            {
+              double anterior = parts.Length > 1 ? double.Parse(parts[1].Trim()) : 0;
+              double atual = parts.Length > 2 ? double.Parse(parts[2].Trim()) : 0;
+              double consumo = atual - anterior;
+
+              ContaEnergia conta1 = new()
+              {
+                Consumidor = consumidores.Last(),
+                LeituraAtual = atual,
+                LeituraAnterior = anterior,
+                Tipo = TipoConta.Energia,
+                Consumo = consumo,
+                Mes = parts.Length > 3 ? int.Parse(parts[3].Trim()) : 0,
+              };
+
+              consumidorAtual.Contas.Add(conta1);
+            }
+            else
+            {
+              Console.WriteLine("Erro: Encontrado registro de energia antes de um cliente. Ignorando a conta de energia.");
+            }
           }
           else
           {
-            Console.WriteLine("Erro: Encontrado registro de água antes de um cliente. Ignorando a conta de água.");
+            Console.WriteLine("Linha fora do formato padrão do arquivo, será devidamente ignorada!");
           }
         }
-        else if (parts.Length > 0 && parts[0].Trim().ToLower() == "energia")
+        catch (ConsumidorEncontrado e)
         {
-          if (consumidorAtual != null)
-          {
-            double atual = parts.Length > 1 ? double.Parse(parts[1].Trim()) : 0;
-            double anterior = parts.Length > 2 ? double.Parse(parts[2].Trim()) : 0;
-            double consumo = anterior - atual;
-
-            ContaEnergia conta1 = new ContaEnergia
-            {
-              Consumidor = consumidores.Last(),
-              LeituraAtual = atual,
-              LeituraAnterior = anterior,
-              TipoServico = parts.Length > 3 ? parts[3].Trim() : string.Empty,
-              Tipo = TipoConta.Energia,
-              Consumo = consumo,
-
-              Mes = parts.Length > 4 ? int.Parse(parts[4].Trim()) : 0,
-            };
-
-            consumidorAtual.Contas.Add(conta1);
-
-            // Console.WriteLine($"Nova conta de Energia criada para o consumidor {consumidores.Last().Nome}: LeituraAtual={conta1.LeituraAtual}, LeituraAnterior={conta1.LeituraAnterior}, TipoServico={conta1.TipoServico}");
-          }
-          else
-          {
-            Console.WriteLine("Erro: Encontrado registro de energia antes de um cliente. Ignorando a conta de energia.");
-          }
-        }
-        else
-        {
-          Console.WriteLine("Linha fora do formato padrão do arquivo, será devidamente ignorada!");
+          Console.WriteLine(e.Message);
         }
         WriteTheFile();
       }
@@ -199,37 +144,250 @@ class Program
     {
       Console.WriteLine($"O arquivo {sr} não foi encontrado. O programa continuará executando.");
     }
-    catch (ConsumidorEncontrado e)
-    {
-      Console.WriteLine(e.Message);
-      // Console.WriteLine("Esse Cpf já se encontra cadastrado.");
-      // Console.WriteLine(e.Message);
-    }
     catch (Exception e)
     {
       Console.WriteLine("Um erro ocorreu durante a leitura do arquivo:");
-      // Console.WriteLine(e.Message);
     }
   }
-
-
   static void SearchByMonth(Consumidor c)
   {
     int month = -1;
-    while (month != 13)
+    while (month != 0)
     {
-      Console.WriteLine("month" + month);
-      Console.WriteLine("Insira o mês atual em número de 2 a 12");
+      Console.WriteLine("Insira o mês atual em número de 1 a 12 (Insira 0 caso queira retornar para o menu.)");
       try
       {
         month = int.Parse(Console.ReadLine());
-        if (month < 2 || month > 12)
+        if (month < 1 || month > 12)
         {
           Console.WriteLine("Insira um mês válido");
         }
         ContaAgua contaAgua = c.Contas.OfType<ContaAgua>().FirstOrDefault(c => c.Mes == month - 1);
         ContaEnergia contaEnergia = c.Contas.OfType<ContaEnergia>().FirstOrDefault(c => c.Mes == month - 1);
         Console.WriteLine("Consumo da conta de Água do Mês passado: " + contaAgua.Consumo);
+        Console.WriteLine("Consumo da conta de Energia do Mês passado: " + contaEnergia.Consumo);
+        Sleep(7000);
+        month = 0;
+        Console.Clear();
+
+      }
+      catch (FormatException e)
+      {
+        ErrorMessage("Insira um número válido de 2 a 12, de acordo com os meses.");
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine("Retornando para o menu...");
+      }
+    }
+
+  }
+
+
+  static void CalcValueWithTax(Consumidor c)
+  {
+    int month = -1;
+    while (month != 13)
+    {
+      try
+      {
+        Console.WriteLine("Insira o mês para realizar a conta pela conta em número de 1 a 12");
+        month = int.Parse(Console.ReadLine());
+
+        if (month < 1 || month > 12)
+        {
+          Console.WriteLine("Insira um mês válido");
+        }
+
+        ContaAgua contaAgua = c.Contas.OfType<ContaAgua>().FirstOrDefault(c => c.Mes == month);
+        ContaEnergia contaEnergia = c.Contas.OfType<ContaEnergia>().FirstOrDefault(c => c.Mes == month);
+
+        double valorAgua = contaAgua.CalcularValor(false);
+        double valorEnergia = contaEnergia.CalcularValor(false);
+
+        Console.WriteLine("Valor da conta de água do mês selecionado: R$" + Math.Round(valorAgua, 2));
+        Console.WriteLine("Valor da conta de energia do mês selecionado: R$" + Math.Round(valorEnergia, 2));
+
+        Sleep(7000);
+        month = 13;
+        Console.Clear();
+
+      }
+      catch (FormatException e)
+      {
+        ErrorMessage("Insira um número válido de 1 a 12, de acordo com os meses.");
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine(e.Message);
+      }
+    }
+
+  }
+
+  static void CalcValueWithoutTax(Consumidor c)
+  {
+    int month = -1;
+    while (month != 13)
+    {
+      try
+      {
+        Console.WriteLine("Insira o mês para realizar a conta pela conta em número de 1 a 12");
+        month = int.Parse(Console.ReadLine());
+
+        if (month < 1 || month > 12)
+        {
+          Console.WriteLine("Insira um mês válido");
+        }
+
+        ContaAgua contaAgua = c.Contas.OfType<ContaAgua>().FirstOrDefault(c => c.Mes == month);
+        ContaEnergia contaEnergia = c.Contas.OfType<ContaEnergia>().FirstOrDefault(c => c.Mes == month);
+
+        double valorAgua = contaAgua.CalcularValor(true);
+        double valorEnergia = contaEnergia.CalcularValor(true);
+
+        Console.WriteLine("Valor da conta de água do mês selecionado: R$" + Math.Round(valorAgua, 2));
+        Console.WriteLine("Valor da conta de energia do mês selecionado: R$" + Math.Round(valorEnergia, 2));
+
+        Sleep(7000);
+        month = 13;
+        Console.Clear();
+
+      }
+      catch (FormatException e)
+      {
+        ErrorMessage("Insira um número válido de 1 a 12, de acordo com os meses.");
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine(e.Message);
+      }
+    }
+
+  }
+  static void AverageAcc(Consumidor c)
+  {
+    double mediaE = 0;
+    double mediaA = 0;
+    double sumA = 0;
+    double sumE = 0;
+    double countA = 0;
+    double countE = 0;
+    try
+    {
+      foreach (Conta a in c.Contas)
+      {
+        if (a.Tipo == TipoConta.Agua)
+        {
+          sumA += a.CalcularValor(false);
+          countA++;
+        }
+        else
+        {
+          sumE += a.CalcularValor(false);
+          countE++;
+        }
+      }
+      mediaE = sumE / countE;
+      mediaA = sumA / countA;
+    }
+    catch (Exception)
+    {
+      ErrorMessage("Erro na execução");
+    }
+    Console.WriteLine("O valor médio da conta de Água é: " + Math.Round(mediaA, 2));
+    Console.WriteLine("O valor médio da conta de Energia é: " + Math.Round(mediaE, 2));
+    Console.WriteLine("4. Valor médio de minha conta de energia/água?");
+  }
+
+  static void MostValueMonth(Consumidor c)
+  {
+    Console.Clear();
+    double maiorConsumoA = 0;
+    double maiorConsumoE = 0;
+    double maiorValorA = 0;
+    double maiorValorE = 0;
+    int mesCE = 0;
+    int mesCA = 0;
+    int mesVE = 0;
+    int mesVA = 0;
+    try
+    {
+      foreach (Conta a in c.Contas)
+      {
+        if (a.Tipo == TipoConta.Agua)
+        {
+          if (a.Consumo > maiorConsumoA)
+          {
+            maiorConsumoA = a.Consumo;
+            mesCA = a.Mes;
+          }
+          else if (a.CalcularValor(false) > maiorValorA)
+          {
+            maiorValorA = a.CalcularValor(false);
+            mesVA = a.Mes;
+          }
+        }
+        else
+        {
+          if (a.Consumo > maiorConsumoE)
+          {
+            maiorConsumoE = a.Consumo;
+            mesCE = a.Mes;
+          }
+          else if (a.CalcularValor(false) > maiorValorE)
+          {
+            maiorValorE = a.CalcularValor(false);
+            mesVE = a.Mes;
+          }
+        }
+      }
+    }
+    catch (Exception)
+    {
+      ErrorMessage("Erro na execução");
+    }
+
+    Console.WriteLine("------- Energia -------");
+    Console.WriteLine("O maior Consumo foi de " + maiorConsumoE + " no mês " + mesCE);
+    Console.WriteLine("O maior Valor foi de R$" + Math.Round(maiorValorE, 2) + " no mês " + mesVE);
+    Console.WriteLine("\n------- Água -------");
+    Console.WriteLine("O maior Consumo foi de " + maiorConsumoA + " no mês " + mesCA);
+    Console.WriteLine("O maior Valor foi de R$" + Math.Round(maiorValorA, 2) + " no mês " + mesVA);
+
+    Sleep(7500);
+    Console.Clear();
+  }
+  static void VariationMonth(Consumidor c)
+  {
+    int month = -1;
+    int month2 = -1;
+    while (month != 13)
+    {
+      try
+      {
+        Console.WriteLine("Insira o primeiro mês para a comparação em número de 1 a 12");
+        month = int.Parse(Console.ReadLine());
+        Console.WriteLine("Insira o segundo mês para a comparação em número de 1 a 12");
+        month2 = int.Parse(Console.ReadLine());
+        if (month < 1 || month > 12)
+        {
+          Console.WriteLine("Insira um mês válido");
+        }
+
+        ContaAgua contaAgua = c.Contas.OfType<ContaAgua>().FirstOrDefault(c => c.Mes == month);
+        ContaAgua contaAgua2 = c.Contas.OfType<ContaAgua>().FirstOrDefault(c => c.Mes == month2);
+        ContaEnergia contaEnergia = c.Contas.OfType<ContaEnergia>().FirstOrDefault(c => c.Mes == month);
+        ContaEnergia contaEnergia2 = c.Contas.OfType<ContaEnergia>().FirstOrDefault(c => c.Mes == month2);
+        // contaEnergia.CalcularValor(false);
+        // contaEnergia2.CalcularValor(false);
+        double variaçãoEnergia = contaEnergia.CalcularValor(false) - contaEnergia2.CalcularValor(false) < 0 ? (contaEnergia.CalcularValor(false) - contaEnergia2.CalcularValor(false)) * -1 : contaEnergia.CalcularValor(false) - contaEnergia2.CalcularValor(false);
+        double variacaoconsumo = contaEnergia.Consumo - contaEnergia2.Consumo < 0 ? (contaEnergia.Consumo - contaEnergia2.Consumo) * -1 : contaEnergia.Consumo - contaEnergia2.Consumo;
+        Console.WriteLine(contaEnergia.CalcularValor(false));
+        Console.WriteLine(contaEnergia2.CalcularValor(false));
+
+        Console.WriteLine("Variação da conta de Água dos meses " + month + " e " + month2);
+        Console.WriteLine("Variação da conta de Água dos meses " + month + " e " + month2 + "diferença de valor: " + Math.Round(variaçãoEnergia, 2) + "| diferença de consumo: " + variacaoconsumo);
         Console.WriteLine("Consumo da conta de Energia do Mês passado: " + contaAgua.Consumo);
         Sleep(7000);
         month = 13;
@@ -238,7 +396,7 @@ class Program
       }
       catch (FormatException e)
       {
-        ErrorMessage("Insira um número válido de 2 a 12, de acordo com os meses.");
+        ErrorMessage("Insira um número válido de 1 a 12, de acordo com os meses.");
       }
       catch (Exception e)
       {
@@ -257,11 +415,23 @@ class Program
     }
     else
     {
+      if (consumidorEncontrado.Contas.Count == 0)
+      {
+        Console.Clear();
+        Console.WriteLine("--------------------------------------------");
+        Console.WriteLine("Consumidor procurado não tem nenhuma conta cadastrada!");
+        Console.WriteLine("--------------------------------------------");
+
+        Console.WriteLine("\nRetornando para o menu inicial...");
+        Sleep(5000);
+        return;
+      }
 
       int entrada = -1;
 
       while (entrada != 6)
       {
+        Console.Clear();
         Console.WriteLine("------ Consumidor com o cpf buscado: " + consumidorEncontrado.Nome + " ------");
         Console.WriteLine("0. Consumo de energia/água no último mês");
         Console.WriteLine("1. Valor total da conta");
@@ -285,6 +455,21 @@ class Program
           case 0:
             SearchByMonth(consumidorEncontrado);
             break;
+          case 1:
+            CalcValueWithTax(consumidorEncontrado);
+            break;
+          case 2:
+            CalcValueWithoutTax(consumidorEncontrado);
+            break;
+          case 3:
+            VariationMonth(consumidorEncontrado);
+            break;
+          case 4:
+            AverageAcc(consumidorEncontrado);
+            break;
+          case 5:
+            MostValueMonth(consumidorEncontrado);
+            break;
           case 6:
             return;
             break;
@@ -298,35 +483,6 @@ class Program
     }
 
   }
-  // static double CalcValue(string tipoImovel, string tipo, double consumo)
-  // {
-  //   try
-  //   {
-
-  //     if (tipo.ToLower() == "energia")
-  //     {
-  //       if (tipoImovel == "residencial")
-  //       {
-
-  //         return (0.46 * consumo + 13.25) * 1.4285;
-  //       }
-  //       else
-  //       {
-  //         return (0.41 * consumo + 13.25) * 1.2195;
-
-  //       }
-  //     }
-  //     else
-  //     {
-  //       return 0;
-  //     }
-  //   }
-  //   catch (Exception e)
-  //   {
-  //     Console.WriteLine(e.Message);
-  //   }
-  //   return 0;
-  // }
 
   static void WriteTheFile()
   {
@@ -336,7 +492,7 @@ class Program
 
       foreach (Consumidor consumidor in consumidores)
       {
-        sw.WriteLine(consumidor.IdConsumidor + "; " + consumidor.Nome + "; " + consumidor.Cpf + "; " + consumidor.TipoConsumidor) ;
+        sw.WriteLine(consumidor.IdConsumidor + "; " + consumidor.Nome + "; " + consumidor.Cpf + "; " + consumidor.TipoConsumidor);
 
         foreach (Conta c in consumidor.Contas)
         {
@@ -371,10 +527,8 @@ class Program
 
     try
     {
-      using (StreamReader sr = new StreamReader(name + ".txt"))
-      {
-        ProcessFileContent(sr);
-      }
+      using StreamReader sr = new(name + ".txt");
+      ProcessFileContent(sr);
     }
     catch (FileNotFoundException)
     {
@@ -426,7 +580,7 @@ class Program
           Console.WriteLine("Insira um Cpf para buscar entre os consumidores");
           string cpf = Console.ReadLine();
           Search(cpf);
-          Sleep(2500);
+          // Sleep(2500);
           Console.Clear();
           break;
 
@@ -434,11 +588,10 @@ class Program
           Console.Clear();
           if (consumidores.Count > 0)
           {
-
             Console.WriteLine("------ Listagem de consumidores ------");
             foreach (Consumidor c in consumidores)
             {
-              Console.WriteLine("Consumidor " + c.IdConsumidor + ": " + c.Nome);
+              Console.WriteLine("Consumidor " + c.IdConsumidor + ": " + c.Nome + " - " + c.TipoConsumidor);
               Console.WriteLine();
             }
             Console.WriteLine("---------------------------------------");
@@ -458,10 +611,18 @@ class Program
             Console.WriteLine("------ Listagem de consumidores e suas contas ------");
             foreach (Consumidor c in consumidores)
             {
-              Console.WriteLine("Consumidor " + c.IdConsumidor + ": " + c.Nome);
+              Console.WriteLine("Consumidor " + c.IdConsumidor + ": " + c.Nome + " - " + c.TipoConsumidor);
               foreach (Conta conta in c.Contas)
               {
-                Console.WriteLine("Leitura atual: " + conta.LeituraAtual + "; Consumo: " + conta.Consumo);
+                if (conta.Tipo == 0)
+                {
+                  Console.WriteLine("Água" + "; " + "Leitura atual: " + conta.LeituraAtual + "; Consumo: " + conta.Consumo);
+                }
+                else
+                {
+                  Console.WriteLine("Energia" + "; " + "Leitura atual: " + conta.LeituraAtual + "; Consumo: " + conta.Consumo);
+                }
+
               }
               Console.WriteLine();
             }
@@ -483,9 +644,7 @@ class Program
             ErrorMessage("Insira um número válido de 0 a 4, de acordo com o menu");
           }
           break;
-
       }
-
     }
     Console.ReadKey();
   }

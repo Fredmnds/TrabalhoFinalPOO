@@ -12,19 +12,45 @@ agua; 155; 180; 10
 agua; 180; 240; 11
 agua; 240; 270; 12
 energia; 10; 20; 1
-energia; 10; 20; 2
-energia; 20; 30; 3
-energia; 10; 20; 4
-energia; 10; 20; 5
-energia; 20; 30; 6
-energia; 10; 20; 7
-energia; 10; 20; 8
-energia; 20; 30; 9
-energia; 10; 20; 10
-energia; 10; 20; 11
-energia; 20; 30; 12
+energia; 20; 40; 2
+energia; 40; 70; 3
+energia; 70; 140; 4
+energia; 140; 200; 5
+energia; 200; 250; 6
+energia; 250; 330; 7
+energia; 330; 400; 8
+energia; 400; 490; 9
+energia; 490; 580; 10
+energia; 580; 660; 11
+energia; 660; 800; 12
 
-Cliente; rodrigo; 12345678913; comercial
+Cliente; Roberto; 2; residencial
+agua; 10; 20; 1
+agua; 20; 40; 2
+agua; 40; 45; 3
+agua; 45; 55; 4
+agua; 55; 60; 5
+agua; 60; 97; 6
+agua; 97; 120; 7
+agua; 120; 140; 8
+agua; 140; 155; 9
+agua; 155; 180; 10
+agua; 180; 240; 11
+agua; 240; 270; 12
+energia; 10; 20; 1
+energia; 20; 40; 2
+energia; 40; 70; 3
+energia; 70; 140; 4
+energia; 140; 200; 5
+energia; 200; 250; 6
+energia; 250; 330; 7
+energia; 330; 400; 8
+energia; 400; 490; 9
+energia; 490; 580; 10
+energia; 580; 660; 11
+energia; 660; 800; 12
+
+Cliente; rodrigo; 3; comercial
 agua; 10; 20;
 agua; 20; 40;
 agua; 40; 45;
