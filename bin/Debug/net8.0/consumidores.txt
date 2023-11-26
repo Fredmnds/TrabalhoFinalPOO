@@ -1,4 +1,4 @@
-1;fred;1; Residencial
+1;fred;12345678912
 Agua;20;10;-10
 Agua;40;20;-20
 Agua;45;40;-5
@@ -24,7 +24,7 @@ Energia;20;10;10
 Energia;20;10;10
 Energia;30;20;10
 -
-2;rodrigo;12345678913; Comercial
+2;rodrigo;12345678913
 Agua;20;10;-10
 Agua;40;20;-20
 Agua;45;40;-5
