@@ -83,7 +83,6 @@ class Program
             double atual = parts.Length > 2 ? double.Parse(parts[2].Trim()) : 0;
             double consumo = atual - anterior;
 
-            // Console.WriteLine(line);
             ContaAgua conta1 = new()
             {
               Consumidor = consumidorAtual,
@@ -577,7 +576,6 @@ class Program
         case 0:
           ReadFile();
           Sleep(2500);
-          // Console.Clear();
           break;
         case 1:
           Console.Clear();
